@@ -1,0 +1,37 @@
+{
+  "name": "js-advanced-diploma",
+  "version": "1.0.0",
+  "description": "###### tags: `netology` `advanced js`",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint .",
+    "start": "webpack serve --mode development",
+    "coverage": "jest --coverage"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.27.2",
+    "@babel/core": "^7.27.4",
+    "@babel/eslint-parser": "^7.27.5",
+    "@babel/preset-env": "^7.27.2",
+    "@eslint/js": "^9.28.0",
+    "@stylistic/eslint-plugin-js": "^4.4.1",
+    "babel-loader": "^10.0.0",
+    "css-loader": "^7.1.2",
+    "eslint": "^9.28.0",
+    "globals": "^16.2.0",
+    "html-loader": "^5.1.0",
+    "html-webpack-plugin": "^5.6.3",
+    "jest": "^29.7.0",
+    "jest-babel": "^1.0.1",
+    "mini-css-extract-plugin": "^2.9.2",
+    "webpack": "^5.99.9",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
+  },
+  "dependencies": {
+    "core-js": "^3.42.0"
+  }
+}

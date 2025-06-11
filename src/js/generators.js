@@ -9,7 +9,13 @@
  *
  */
 export function* characterGenerator(allowedTypes, maxLevel) {
-  // TODO: write logic here
+    // TODO: write logic here
+    while (true) {
+        const index = Math.floor(Math.random() * allowedTypes.length);
+        const level = Math.floor(Math.random() * maxLevel) + 1;
+        const randomType = allowedTypes[index];
+        yield new randomType(level);
+    }
 }
 
 /**
@@ -20,5 +26,17 @@ export function* characterGenerator(allowedTypes, maxLevel) {
  * @returns экземпляр Team, хранящий экземпляры персонажей. Количество персонажей в команде - characterCount
  * */
 export function generateTeam(allowedTypes, maxLevel, characterCount) {
-  // TODO: write logic here
+    // TODO: write logic here
+    const team = [];
+    const playerGenerator = characterGenerator(allowedTypes, maxLevel);
+
+    for(let i = 0; i < characterCount; i += 1) {
+        team.push(playerGenerator.next().value);
+    };
+
+    return team;
+}
+
+export function getRandomPosition(positions) {
+    return positions[Math.floor(Math.random() * positions.length)];
 }
