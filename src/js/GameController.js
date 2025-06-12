@@ -1,4 +1,5 @@
 import GamePlay from './GamePlay';
+import cursors from './cursors';
 import { generateTeam, getRandomPosition } from './generators';
 import themes from './themes';
 import Team from './Team';
@@ -22,6 +23,8 @@ export default class GameController {
         this.userCharacters = [
             Bowman, Swordsman, Magician
         ];
+        this.addEventListeners();
+        this.positionedCharacters = [];
     }
 
     init() {
@@ -30,13 +33,19 @@ export default class GameController {
         this.userTeam.addAll(generateTeam(this.userCharacters, 1, 2));
         this.botTeam.addAll(generateTeam(this.botCharacters, 1, 2));
 
-        this.positionedCharacters = [];
         this.addCharactersPosition(this.userTeam, this.getPlayerPositions());
         this.addCharactersPosition(this.botTeam, this.getBotPositions());
+        console.log(this.positionedCharacters);
         this.gamePlay.redrawPositions(this.positionedCharacters);
 
     // TODO: add event listeners to gamePlay events
     // TODO: load saved stated from stateService
+    }
+
+    addEventListeners(){
+        this.gamePlay.addCellEnterListener(this.onCellEnter.bind(this));
+        this.gamePlay.addCellLeaveListener(this.onCellLeave.bind(this));
+        this.gamePlay.addCellClickListener(this.onCellClick.bind(this));
     }
 
     onCellClick(index) {
@@ -45,10 +54,20 @@ export default class GameController {
 
     onCellEnter(index) {
     // TODO: react to mouse enter
+        if(this.getChar(index)){
+            this.gamePlay.setCursor(cursors.pointer);
+            const char = this.getCharInCell(index).character;
+            const message = `\u{1F396}${char.level} \u{2694}${char.attack} \u{1F6E1}${char.defence} \u{2764}${char.health}`;
+            this.gamePlay.showCellTooltip(message, index);
+        } else {
+            this.gamePlay.setCursor(cursors.auto);
+        }
     }
 
     onCellLeave(index) {
     // TODO: react to mouse leave
+        this.gamePlay.setCursor(cursors.auto);
+        this.gamePlay.hideCellTooltip(index);
     }
 
     getPlayerPositions() {
@@ -77,5 +96,17 @@ export default class GameController {
             this.positionedCharacters.push(new PositionedCharacter(char, indexRandom));
             allPositions.splice(allPositions.indexOf(indexRandom), 1);
         }
+    }
+
+    getCharInCell(index) {
+        return this.positionedCharacters.find(char => char.position === index);
+    }
+
+    getChar(index) {
+        if (this.getCharInCell(index)) {
+            const char = this.getCharInCell(index);
+            return this.positionedCharacters.some(char => char.character);
+        }
+        return false;
     }
 }
