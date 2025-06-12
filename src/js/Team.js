@@ -18,13 +18,15 @@ export default class Team {
 
     add(character) {
         if (this.characters.has(character)) {
-          throw new Error(`Этот персонаж ${character.type} уже существует`);
+            throw new Error(`Этот персонаж ${character.type} уже существует`);
         }
-    
+
         this.characters.add(character);
     }
 
     addAll(characters) {
-        this.characters = new Set([...this.characters, ...characters]);
+        this.characters = new Set([
+            ...this.characters, ...characters
+        ]);
     }
 }

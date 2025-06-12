@@ -17,10 +17,10 @@ export default class GameController {
         this.userTeam = new Team();
         this.botTeam = new Team();
         this.botCharacters = [
-          Daemon, Undead, Vampire
+            Daemon, Undead, Vampire
         ];
         this.userCharacters = [
-          Bowman, Swordsman, Magician
+            Bowman, Swordsman, Magician
         ];
     }
 
@@ -52,30 +52,30 @@ export default class GameController {
     }
 
     getPlayerPositions() {
-      this.playerPosition = [];
-      for (let i = 0 ; i < this.gamePlay.boardSize ** 2; i += this.gamePlay.boardSize) {
-        this.playerPosition.push(i, i + 1);
-      };
+        this.playerPosition = [];
+        for (let i = 0 ; i < this.gamePlay.boardSize ** 2; i += this.gamePlay.boardSize) {
+            this.playerPosition.push(i, i + 1);
+        };
 
-      return this.playerPosition;
+        return this.playerPosition;
     }
 
     getBotPositions() {
-      this.botPosition = [];
-      for (let i = 6 ; i < this.gamePlay.boardSize ** 2; i += this.gamePlay.boardSize) {
-        this.botPosition.push(i, i + 1);
-      };
+        this.botPosition = [];
+        for (let i = 6 ; i < this.gamePlay.boardSize ** 2; i += this.gamePlay.boardSize) {
+            this.botPosition.push(i, i + 1);
+        };
 
-      return this.botPosition;
+        return this.botPosition;
     }
 
     addCharactersPosition(team, positions) {
-      const allPositions = [...positions];
-  
-      for (const char of team.characters) {
-        const indexRandom = getRandomPosition(allPositions);
-        this.positionedCharacters.push(new PositionedCharacter(char, indexRandom));
-        allPositions.splice(allPositions.indexOf(indexRandom), 1);
-      }
+        const allPositions = [ ...positions ];
+
+        for (const char of team.characters) {
+            const indexRandom = getRandomPosition(allPositions);
+            this.positionedCharacters.push(new PositionedCharacter(char, indexRandom));
+            allPositions.splice(allPositions.indexOf(indexRandom), 1);
+        }
     }
 }

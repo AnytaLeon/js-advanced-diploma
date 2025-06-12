@@ -13,25 +13,38 @@ test('error when creating an object of the Character class', () => {
 //Проверьте, правильные ли характеристики содержат создаваемые персонажи 1-ого уровня
 
 test.each([
-    [Bowman, {
-        level: 1, attack: 25, defence: 25, health: 50, type: 'bowman'
-    }],
-    [Daemon, {
-        level: 1, attack: 10, defence: 10, health: 50, type: 'daemon'
-    }],
-    [Magician, {
-        level: 1, attack: 10, defence: 40, health: 50, type: 'magician'
-    }],
-    [Swordsman, {
-        level: 1, attack: 40, defence: 10, health: 50, type: 'swordsman'
-    }],
-    [Undead, {
-        level: 1, attack: 40, defence: 10, health: 50, type: 'undead'
-    }],
-    [Vampire, {
-        level: 1, attack: 25, defence: 25, health: 50, type: 'vampire'
-    }],
+    [
+        Bowman, {
+            level: 1, attack: 25, defence: 25, health: 50, type: 'bowman'
+        }
+    ],
+    [
+        Daemon, {
+            level: 1, attack: 10, defence: 10, health: 50, type: 'daemon'
+        }
+    ],
+    [
+        Magician, {
+            level: 1, attack: 10, defence: 40, health: 50, type: 'magician'
+        }
+    ],
+    [
+        Swordsman, {
+            level: 1, attack: 40, defence: 10, health: 50, type: 'swordsman'
+        }
+    ],
+    [
+        Undead, {
+            level: 1, attack: 40, defence: 10, health: 50, type: 'undead'
+        }
+    ],
+    [
+        Vampire, {
+            level: 1, attack: 25, defence: 25, health: 50, type: 'vampire'
+        }
+    ],
 ])('check creating of characters', (Instance, expected) => {
     const char = new Instance(1);
     expect(char).toEqual(expected);
 });
+
