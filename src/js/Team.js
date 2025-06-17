@@ -29,4 +29,8 @@ export default class Team {
             ...this.characters, ...characters
         ]);
     }
+
+    deleteCharacter(char) {
+        this.characters.delete(char);
+    }
 }

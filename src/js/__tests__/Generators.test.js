@@ -20,8 +20,7 @@ test('check characterGenerator', () => {
     ];
     const characterCount = 5;
     const team = generateTeam(allowedTypes, 3, characterCount);
-    const types = allowedTypes.map(item => item.name.toLowerCase());
-    expect(team.every(item => types.includes(item.type))).toBeTruthy();
+    expect(team.every(item => allowedTypes.some(character => item instanceof character ))).toBeTruthy();
 });
 
 //Проверьте, в нужном ли количестве создаются персонажи при вызове generateTeam
@@ -45,3 +44,4 @@ test('check generateTeam', () => {
 
     expect(team.every(item => (item.level >= 1 && item.level <= 10))).toBeTruthy();
 });
+

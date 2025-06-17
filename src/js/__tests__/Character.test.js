@@ -15,32 +15,32 @@ test('error when creating an object of the Character class', () => {
 test.each([
     [
         Bowman, {
-            level: 1, attack: 25, defence: 25, health: 50, type: 'bowman'
+            level: 1, attack: 25, defence: 25, health: 50, type: 'bowman', maxMoveDistance: 2, maxAttackDistance: 2
         }
     ],
     [
         Daemon, {
-            level: 1, attack: 10, defence: 10, health: 50, type: 'daemon'
+            level: 1, attack: 10, defence: 10, health: 50, type: 'daemon', maxMoveDistance: 1, maxAttackDistance: 4
         }
     ],
     [
         Magician, {
-            level: 1, attack: 10, defence: 40, health: 50, type: 'magician'
+            level: 1, attack: 10, defence: 40, health: 50, type: 'magician', maxMoveDistance: 1, maxAttackDistance: 4
         }
     ],
     [
         Swordsman, {
-            level: 1, attack: 40, defence: 10, health: 50, type: 'swordsman'
+            level: 1, attack: 40, defence: 10, health: 50, type: 'swordsman', maxMoveDistance: 4, maxAttackDistance: 1
         }
     ],
     [
         Undead, {
-            level: 1, attack: 40, defence: 10, health: 50, type: 'undead'
+            level: 1, attack: 40, defence: 10, health: 50, type: 'undead', maxMoveDistance: 4, maxAttackDistance: 1
         }
     ],
     [
         Vampire, {
-            level: 1, attack: 25, defence: 25, health: 50, type: 'vampire'
+            level: 1, attack: 25, defence: 25, health: 50, type: 'vampire', maxMoveDistance: 2, maxAttackDistance: 2
         }
     ],
 ])('check creating of characters', (Instance, expected) => {

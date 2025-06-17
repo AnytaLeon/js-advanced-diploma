@@ -14,10 +14,10 @@ const testCtrl = new GameController(new GamePlay(), stateService);
 const posVampire = new PositionedCharacter(new Vampire(1), 30);
 const posSwordsman = new PositionedCharacter(new Swordsman(1), 1);
 const posBowman = new PositionedCharacter(new Bowman(1), 24);
-const posDaemon = new PositionedCharacter(new Daemon(1), 33);
+const posDaemon = new PositionedCharacter(new Daemon(1), 25);
 testCtrl.gamePlay.selectCell = jest.fn();
 testCtrl.gamePlay.setCursor = jest.fn();
-testCtrl.positionedCharacters.push(posBowman, posSwordsman, posVampire, posDaemon);
+testCtrl.gameState.positionedCharacters.push(posBowman, posSwordsman, posVampire, posDaemon);
 testCtrl.gamePlay.showCellTooltip = jest.fn();
 testCtrl.gamePlay.hideCellTooltip = jest.fn();
 
@@ -35,4 +35,16 @@ test('Метод onCellLeave вызывает hideCellTooltip и курсор = 
     testCtrl.onCellLeave(24);
     expect(testCtrl.gamePlay.hideCellTooltip).toBeCalled();
     expect(testCtrl.gamePlay.setCursor).toHaveBeenCalledWith(cursors.auto);
+});
+
+test('Если в ячейке есть персонаж противника, то курсор = crosshair', () => {
+    testCtrl.gameState.playerSelected = 24;
+    testCtrl.onCellEnter(25);
+    expect(testCtrl.gamePlay.setCursor).toHaveBeenCalledWith(cursors.crosshair);
+});
+
+test('Если персонаж выбран, но не валидный диапазон, то курсор = notallowed', () => {
+    testCtrl.gameState.playerSelected = 1;
+    testCtrl.onCellEnter(63);
+    expect(testCtrl.gamePlay.setCursor).toHaveBeenCalledWith(cursors.notallowed);
 });
