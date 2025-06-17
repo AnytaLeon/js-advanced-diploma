@@ -186,7 +186,7 @@ export default class GameController {
     }
 
     userAttack(index, attacker, target) {
-        const damage = Math.max(30, attacker.attack * 0.1);
+        const damage = Math.max(attacker.attack - target.defence, attacker.attack * 0.1);
         this.gamePlay.showDamage(index, damage).then(() => {
             target.health -= damage;
             this.gameState.points += damage;
