@@ -8,7 +8,10 @@ export default class GameState {
         this.statistics = [];
     }
     static from(object) {
-    // TODO: create object
+        if (typeof object === 'object') {
+            return object;
+        };
+
         return null;
     }
 }

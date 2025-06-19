@@ -1,6 +1,7 @@
 import { calcTileType, getDistance } from '../utils';
 import PositionedCharacter from '../PositionedCharacter';
 import Bowman from '../characters/Bowman';
+import Magician from '../characters/Magician';
 
 test.each([
     [
@@ -33,16 +34,31 @@ test.each([
 
 test('check getDistance move', () => {
     const bowman = new Bowman(1);
-    const moveDistance = [16, 17, 0, 9, 2, 10, 11, 4, 19, 20, 27, 36, 26, 34, 25, 32];
+    const moveDistance = [
+        16, 17, 0, 9, 2, 10, 11, 4, 19, 20, 27, 36, 26, 34, 25, 32
+    ];
     moveDistance.sort((a,b) => a-b);
     const expectmoveDistance = getDistance(18, bowman, 8, 'move');
 
     expect(expectmoveDistance).toEqual(moveDistance);
 });
 
+test('check getDistance move', () => {
+    const bowman = new Magician(1);
+    const moveDistance = [
+        1, 8, 9
+    ];
+    moveDistance.sort((a,b) => a-b);
+    const expectmoveDistance = getDistance(0, bowman, 8, 'move');
+
+    expect(expectmoveDistance).toEqual(moveDistance);
+});
+
 test('check getDistance attack', () => {
     const bowman = new Bowman(1);
-    const attackDistance = [16, 17, 0, 9, 2, 10, 11, 4, 19, 20, 27, 36, 26, 34, 25, 32, 8, 1, 3, 12, 28, 35, 33, 24];
+    const attackDistance = [
+        16, 17, 0, 9, 2, 10, 11, 4, 19, 20, 27, 36, 26, 34, 25, 32, 8, 1, 3, 12, 28, 35, 33, 24
+    ];
     attackDistance.sort((a,b) => a-b);
     const expectattackDistance = getDistance(18, bowman, 8, 'attack');
 
