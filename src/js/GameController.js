@@ -138,24 +138,25 @@ export default class GameController {
     }
 
     onCellClick(index) {
-    // TODO: react to click
+
+        // TODO: react to click
         if(this.getChar(index) && this.isUserSelected(index)) {
             this.gamePlay.cells.forEach((elem) => elem.classList.remove('selected'));
             this.gameState.positionedCharacters.forEach(item => this.gamePlay.deselectCell(item.position));
             this.gameState.playerSelected = index;
             this.gamePlay.selectCell(index);
-
         }
 
-        if(!this.getChar(index) && this.gameState.playerSelected && this.checkUserDistance(index, 'move')) {
+        if(!this.getChar(index) && (this.gameState.playerSelected !== null) && this.checkUserDistance(index, 'move')) {
             this.changeCellUser(index);
             this.gamePlay.cells.forEach((elem) => elem.classList.remove('selected-yellow'));
             this.changePlayer();
             this.gamePlay.cells.forEach((elem) => elem.classList.remove('selected-green'));
         }
-        if(this.gameState.playerSelected && this.checkUserDistance(index, 'attack') && this.isBotSelected(index)) {
+        if((this.gameState.playerSelected !== null) && this.checkUserDistance(index, 'attack') && this.isBotSelected(index)) {
             const attacker = this.getSelectedChar().character;
             const target = this.getCharInCell(index).character;
+            this.gamePlay.cells.forEach((elem) => elem.classList.remove('selected-yellow'));
             this.userAttack(index, attacker, target);
         }
     }
@@ -177,15 +178,15 @@ export default class GameController {
             this.gamePlay.showCellTooltip(message, index);
         };
 
-        if (!this.getChar(index) && this.gameState.playerSelected && this.checkUserDistance(index, 'move')) {
+        if (!this.getChar(index) && (this.gameState.playerSelected !== null) && this.checkUserDistance(index, 'move')) {
             this.gamePlay.selectCell(index, 'green');
         }
 
-        if(this.gameState.playerSelected && !this.checkUserDistance(index, 'move') && !this.checkUserDistance(index, 'attack') && !this.isBotSelected(index)) {
+        if((this.gameState.playerSelected !== null) && !this.checkUserDistance(index, 'move') && !this.checkUserDistance(index, 'attack') && !this.isBotSelected(index)) {
             this.gamePlay.setCursor(cursors.notallowed);
         }
 
-        if(this.gameState.playerSelected && this.isBotSelected(index) && this.checkUserDistance(index, 'attack')) {
+        if((this.gameState.playerSelected !== null) && this.isBotSelected(index) && this.checkUserDistance(index, 'attack')) {
             this.gamePlay.setCursor(cursors.crosshair);
             this.gamePlay.selectCell(index, 'red');
         };

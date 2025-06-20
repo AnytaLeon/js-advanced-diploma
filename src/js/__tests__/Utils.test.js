@@ -44,9 +44,9 @@ test('check getDistance move', () => {
 });
 
 test('check getDistance move', () => {
-    const bowman = new Magician(1);
+    const bowman = new Bowman(1);
     const moveDistance = [
-        1, 8, 9
+        1, 2, 8, 16, 9, 18
     ];
     moveDistance.sort((a,b) => a-b);
     const expectmoveDistance = getDistance(0, bowman, 8, 'move');
