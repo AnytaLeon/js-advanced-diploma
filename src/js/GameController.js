@@ -29,19 +29,20 @@ export default class GameController {
     }
 
     init() {
-
         this.gamePlay.drawUi(themes.prairie);
         this.userTeam = new Team();
         this.botTeam = new Team();
+        this.gameState.positionedCharacters = [];
+
         this.userTeam.addAll(generateTeam(userCharacters, 1, 2));
         this.botTeam.addAll(generateTeam(botCharacters, 1, 2));
-        this.gameState.positionedCharacters = [];
 
         this.addCharactersPosition(this.userTeam, this.getPlayerPositions());
         this.addCharactersPosition(this.botTeam, this.getBotPositions());
-        const load = this.stateService.load();
 
+        const load = this.stateService.load();
         this.gameState.statistics = load.statistics;
+
         this.gamePlay.redrawPositions(this.gameState.positionedCharacters);
         this.addEventListeners();
 
@@ -59,14 +60,14 @@ export default class GameController {
     }
 
     onNewGame(){
-
-        this.stateService.save(GameState.from({
-            positionedCharacters: [ ...this.gameState.positionedCharacters ],
-            playerSelected: this.gameState.playerSelected,
-            level: this.gameState.level,
-            points: this.gameState.points,
-            statistics: [ ...this.gameState.statistics ]
-        }));
+        this.gameState.isUsersTurn = true;
+        // this.stateService.save(GameState.from({
+        //     positionedCharacters: [ ...this.gameState.positionedCharacters ],
+        //     playerSelected: this.gameState.playerSelected,
+        //     level: this.gameState.level,
+        //     points: this.gameState.points,
+        //     statistics: [ ...this.gameState.statistics ]
+        // }));
         this.init();
         const load = this.stateService.load();
         this.gameState.statistics = load.statistics;
@@ -90,6 +91,7 @@ export default class GameController {
             GamePlay.showMessage('Нет сохраненной игры');
             return;
         };
+        this.gameState.isUsersTurn = load.isUsersTurn;
         this.gamePlay.drawUi(themes[Object.keys(themes)[load.level - 1]]);
         this.gameState.level = load.level;
         this.gameState.points = load.points;
@@ -142,7 +144,7 @@ export default class GameController {
         // TODO: react to click
         if(this.getChar(index) && this.isUserSelected(index)) {
             this.gamePlay.cells.forEach((elem) => elem.classList.remove('selected'));
-            this.gameState.positionedCharacters.forEach(item => this.gamePlay.deselectCell(item.position));
+            // this.gameState.positionedCharacters.forEach(item => this.gamePlay.deselectCell(item.position));
             this.gameState.playerSelected = index;
             this.gamePlay.selectCell(index);
         }
@@ -158,6 +160,8 @@ export default class GameController {
             const target = this.getCharInCell(index).character;
             this.gamePlay.cells.forEach((elem) => elem.classList.remove('selected-yellow'));
             this.userAttack(index, attacker, target);
+            this.gamePlay.cells.forEach((elem) => elem.classList.remove('selected-red'));
+
         }
     }
 
@@ -208,12 +212,12 @@ export default class GameController {
     }
 
     getBotPositions() {
-        this.botPosition = [];
-        for (let i = 6 ; i < this.gamePlay.boardSize ** 2; i += this.gamePlay.boardSize) {
-            this.botPosition.push(i, i + 1);
+        const botPosition = [];
+        for (let i = this.gamePlay.boardSize - 2 ; i < this.gamePlay.boardSize ** 2; i += this.gamePlay.boardSize) {
+            botPosition.push(i, i + 1);
         };
 
-        return this.botPosition;
+        return botPosition;
     }
 
     addCharactersPosition(team, positions) {
@@ -277,8 +281,9 @@ export default class GameController {
     }
 
     userAttack(index, attacker, target) {
-
-        const damage = Math.max(attacker.attack - target.defence, attacker.attack * 0.1);
+        if(this.gameState.isUsersTurn) {
+            const damage = Math.max(attacker.attack - target.defence, 30);
+        // const damage = Math.max(attacker.attack - target.defence, attacker.attack * 0.1);
         this.gamePlay.showDamage(index, damage).then(() => {
             target.health -= damage;
             this.gameState.points += damage;
@@ -295,9 +300,15 @@ export default class GameController {
             this.getGameResult();
             this.botAttack();
         });
+        this.gameState.isUsersTurn = false;
+        }
+        
     }
 
     botAttack() {
+        if (this.gameState.isUsersTurn) {
+            return;
+        };
         const userTeam = this.gameState.positionedCharacters.filter((char) => (char.character instanceof Bowman || char.character instanceof Swordsman || char.character instanceof Magician));
         const botTeam = this.gameState.positionedCharacters.filter((char) => (char.character instanceof Vampire || char.character instanceof Undead || char.character instanceof Daemon));
 
@@ -327,6 +338,7 @@ export default class GameController {
             }).then(() => {
                 this.gameState.playerSelected = null;
                 this.gamePlay.redrawPositions(this.gameState.positionedCharacters);
+                this.gameState.isUsersTurn = true;
             }).then(() => {
                 this.getGameResult();
             });
@@ -346,12 +358,14 @@ export default class GameController {
             };
             botCurrent.position = moveDistance[Math.floor(Math.random() * moveDistance.length)];
             this.gamePlay.redrawPositions(this.gameState.positionedCharacters);
+            this.gameState.isUsersTurn = true;
         }
     }
 
     changePlayer() {
         this.gameState.playerSelected = null;
         this.gamePlay.redrawPositions(this.gameState.positionedCharacters);
+        this.gameState.isUsersTurn = false;
         this.botAttack();
     }
 
@@ -365,14 +379,17 @@ export default class GameController {
 
         };
         if(this.botTeam.characters.size === 0 && this.gameState.level < 4) {
+            this.gameState.isUsersTurn = true;
             this.gameState.statistics.push(this.gameState.points);
             this.gameState.level += 1;
             this.upGradeLevel();
             GamePlay.showMessage(`Вы перешли на level ${this.gameState.level}, у вас очков - ${totalPoints + this.gameState.points}!`);
+
         }
         if(this.botTeam.characters.size === 0 && this.gameState.level === 4) {
             this.gameState.statistics.push(this.gameState.points);
             GamePlay.showMessage(`Поздравляю! Вы выиграли, у вас очков - ${totalPoints + this.gameState.points}!`);
+
             this.removeListenerBoard();
         }
     }
@@ -387,25 +404,20 @@ export default class GameController {
         this.gameState.positionedCharacters = [];
         this.userTeam.characters.forEach(char => char.levelUp());
 
-        switch(this.gameState.level) {
-        case 2:
+        if(this.gameState.level === 2) {
             this.gamePlay.drawUi(themes.desert);
             this.userTeam.addAll(generateTeam(userCharacters, 1, 1));
-            this.botTeam.addAll(generateTeam(botCharacters, 1, this.userTeam.characters.size));
-
-            break;
-
-        case 3:
+            this.botTeam.addAll(generateTeam(botCharacters, 2, this.userTeam.characters.size)); 
+        };
+        if(this.gameState.level === 3) {
             this.gamePlay.drawUi(themes.arctic);
             this.userTeam.addAll(generateTeam(userCharacters, 2, 2));
             this.botTeam.addAll(generateTeam(botCharacters, 3, this.userTeam.characters.size));
-            break;
-
-        case 4:
+        };
+        if(this.gameState.level === 4) {
             this.gamePlay.drawUi(themes.mountain);
             this.userTeam.addAll(generateTeam(userCharacters, 3, 2));
             this.botTeam.addAll(generateTeam(botCharacters, 4, this.userTeam.characters.size));
-            break;
         };
 
         this.addCharactersPosition(this.userTeam, this.getPlayerPositions());

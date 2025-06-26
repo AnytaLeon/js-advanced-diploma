@@ -6,6 +6,7 @@ export default class GameState {
         this.playerSelected = null;
         this.points = 0;
         this.statistics = [];
+        this.isUsersTurn = true;
     }
     static from(object) {
         if (typeof object === 'object') {
